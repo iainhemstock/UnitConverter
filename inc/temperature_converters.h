@@ -10,4 +10,13 @@ public:
         }
 };
 
+class FahrenheitToCelsiusConverter
+{
+public:
+        const double convert(const double value) const
+        {
+                return (value - 32) / 1.8;
+        }
+};
+
 #endif
