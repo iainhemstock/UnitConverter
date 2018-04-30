@@ -43,28 +43,37 @@ TEST_P(CelsiusToFahrenheitParamTests, ShouldConvertCelsiusToFahrenheit)
         EXPECT_THAT(cut.convert(celsius), DoubleEq(fahrenheit));
 }
 
-TEST(FahrenheitToCelsiusTests, ExpectZeroToConvertToCelsius)
+class FahrenheitToCelsiusParamTests : public TestWithParam<std::pair<double, double>>
 {
-        EXPECT_THAT(
-                FahrenheitToCelsiusConverter().convert(0),
-                DoubleNear(-17.7778, 0.001)
-        );
-}
+public:
+        FahrenheitToCelsiusConverter cut;
+};
 
-TEST(FahrenheitToCelsiusTests, ExpectVerySmallNumberToConvertToFahrenheit)
-{
-        EXPECT_THAT(
-                FahrenheitToCelsiusConverter().convert(-3.14159265359e+8),
-                DoubleEq(-1.7453294297722223e+8)
-        );
-}
+INSTANTIATE_TEST_CASE_P(
+        ,
+        FahrenheitToCelsiusParamTests,
+        Values(
+                std::pair<double, double>(-3.14159265359e+8,   -1.7453294297722223e+8),
+                std::pair<double, double>(-50.0,               -45.56),
+                std::pair<double, double>(-40.0,               -40.0),
+                std::pair<double, double>(-30.0,               -34.44),
+                std::pair<double, double>(-20.0,               -28.89),
+                std::pair<double, double>(-10.0,               -23.33),
+                std::pair<double, double>(0.0,                 -17.78),
+                std::pair<double, double>(10.0,                -12.22),
+                std::pair<double, double>(20.0,                -6.67),
+                std::pair<double, double>(30.0,                -1.11),
+                std::pair<double, double>(40.0,                4.44),
+                std::pair<double, double>(50.0,                10.0),
+                std::pair<double, double>(3.14159265359e+8,    1.7453290742166668e+8)
+        )
+);
 
-TEST(FahrenheitToCelsiusTests, ExpectVeryLargeNumberToConvertToFahrenheit)
+TEST_P(FahrenheitToCelsiusParamTests, ShouldConvertFahrenheitToCelsius)
 {
-        EXPECT_THAT(
-                FahrenheitToCelsiusConverter().convert(3.14159265359e+8),
-                DoubleEq(1.7453290742166668e+8)
-        );
+        const double fahrenheit = GetParam().first;
+        const double celsius = GetParam().second;
+        EXPECT_THAT(cut.convert(fahrenheit), DoubleNear(celsius, 0.01));
 }
 
 #endif
