@@ -28,6 +28,7 @@ include_directories(
 add_executable(${CMAKE_PROJECT_NAME}
         main.cpp
         tests/tests.cpp
+        src/CmdLineParser.cpp
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME}

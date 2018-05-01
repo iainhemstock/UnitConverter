@@ -34,7 +34,7 @@ TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertFrom)
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const std::string expected = argv[3];
         CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.convertFrom(), Eq(expected));
+        EXPECT_THAT(parser.converters().first, Eq(expected));
 }
 
 TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertTo)
@@ -43,5 +43,5 @@ TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertTo)
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const std::string expected = argv[5];
         CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.convertTo(), Eq(expected));
+        EXPECT_THAT(parser.converters().second, Eq(expected));
 }
