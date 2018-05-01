@@ -12,13 +12,13 @@ CmdLineParserException::errMsg() const
         return m_errMsg;
 }
 
-CmdLineParser::CmdLineParser(const int argc, char * argv[])
+CmdLineParser::CmdLineParser(const int argc, char * argv[], CmdLineParser::Args * args)
 {
-        parse(argc, argv);
+        parse(argc, argv, args);
 }
 
 void
-CmdLineParser::parse(const int argc, char * argv[])
+CmdLineParser::parse(const int argc, char * argv[], CmdLineParser::Args * args)
 {
         if (isValidArgCount(argc))
         {
@@ -26,7 +26,8 @@ CmdLineParser::parse(const int argc, char * argv[])
                 {
                         extern int optind;
                         optind = 0;
-                        m_appName = argv[0];
+
+                        args->appName = argv[0];
                         static struct option long_options[] =
                         {
                                 { "from", required_argument, 0, 'f' },
@@ -39,40 +40,22 @@ CmdLineParser::parse(const int argc, char * argv[])
                                 switch (c)
                                 {
                                         case 'f':
-                                                m_convertFrom = optarg;
+                                                args->converters.first = optarg;
                                                 break;
                                         case 't':
-                                                m_convertTo = optarg;
+                                                args->converters.second = optarg;
                                                 break;
                                 }
                         }
 
                         if (optind < argc)
-                                m_valueToConvert = std::strtod(argv[optind], nullptr);
+                                args->valueToConvert = std::strtod(argv[optind], nullptr);
                 }
         }
         else
         {
                 throw CmdLineParserException("Invalid arg count: should be 6");
         }
-}
-
-const std::string
-CmdLineParser::appName() const
-{
-        return m_appName;
-}
-
-const double
-CmdLineParser::valueToConvert() const
-{
-        return m_valueToConvert;
-}
-
-std::pair<std::string, std::string>
-CmdLineParser::converters() const
-{
-        return std::make_pair(m_convertFrom, m_convertTo);
 }
 
 const bool

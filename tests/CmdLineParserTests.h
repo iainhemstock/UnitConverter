@@ -8,6 +8,7 @@ public:
         constexpr static int argc{6};
         char * argv[argc];
         CmdLineParser cut;
+        CmdLineParser::Args args;
 public:
         void SetUp()
         {
@@ -18,7 +19,8 @@ public:
                 argv[4] = (char*)"--to";
                 argv[5] = (char*)"fahrenheit";
 
-                cut.parse(argc, argv);
+
+                cut.parse(argc, argv, &args);
         }
 };
 
@@ -26,7 +28,7 @@ TEST_F(CmdLineParserTests, ShouldThrowWhenNoArgsAreProvided)
 {
         try
         {
-                CmdLineParser cut(0, nullptr);
+                CmdLineParser cut(0, nullptr, nullptr);
                 throw int{}; // caught in catch(...) below
         }
         catch (const CmdLineParserException& ex)
@@ -41,25 +43,25 @@ TEST_F(CmdLineParserTests, ShouldThrowWhenNoArgsAreProvided)
 
 TEST_F(CmdLineParserTests, ShouldNotThrowWhenSixArgsAreProvided)
 {
-        EXPECT_NO_THROW(CmdLineParser(6, nullptr));
+        EXPECT_NO_THROW(CmdLineParser(6, nullptr, nullptr));
 }
 
 TEST_F(CmdLineParserTests, ShouldReturnAppName)
 {
-        EXPECT_THAT(cut.appName(), Eq(argv[0]));
+        EXPECT_THAT(args.appName, Eq(argv[0]));
 }
 
 TEST_F(CmdLineParserTests, ShouldReturnValueToConvert)
 {
-        EXPECT_THAT(cut.valueToConvert(), Eq(3.14));
+        EXPECT_THAT(args.valueToConvert, Eq(3.14));
 }
 
 TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertFrom)
 {
-        EXPECT_THAT(cut.converters().first, Eq("celsius"));
+        EXPECT_THAT(args.converters.first, Eq("celsius"));
 }
 
 TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertTo)
 {
-        EXPECT_THAT(cut.converters().second, Eq("fahrenheit"));
+        EXPECT_THAT(args.converters.second, Eq("fahrenheit"));
 }

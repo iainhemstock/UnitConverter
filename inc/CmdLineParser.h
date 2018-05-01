@@ -16,20 +16,19 @@ private:
 class CmdLineParser
 {
 public:
+        struct Args
+        {
+                std::string appName{};
+                double valueToConvert{};
+                std::pair<std::string, std::string> converters{};
+        };
+public:
         CmdLineParser() = default;
-        CmdLineParser(const int argc, char * argv[]);
+        CmdLineParser(const int argc, char * argv[], CmdLineParser::Args * args);
 
-        void parse(const int argc, char * argv[]);
-        const std::string appName() const;
-        const double valueToConvert() const;
-        std::pair<std::string, std::string> converters() const;
+        void parse(const int argc, char * argv[], CmdLineParser::Args * args);
 private:
         const bool isValidArgCount(const int argc);
-private:
-        std::string m_appName{};
-        double m_valueToConvert{};
-        std::string m_convertFrom{};
-        std::string m_convertTo{};
 };
 
 #endif
