@@ -22,11 +22,25 @@ public:
         }
 };
 
-TEST_F(CmdLineParserTests, ShouldThrowWhenArgCountIsNotExactlySix)
+TEST_F(CmdLineParserTests, ShouldThrowWhenNoArgsAreProvided)
 {
-        EXPECT_THROW(CmdLineParser(0, nullptr), CmdLineParserException);
-        EXPECT_THROW(CmdLineParser(5, nullptr), CmdLineParserException);
-        EXPECT_THROW(CmdLineParser(7, nullptr), CmdLineParserException);
+        try
+        {
+                CmdLineParser cut(0, nullptr);
+                throw int{}; // caught in catch(...) below
+        }
+        catch (const CmdLineParserException& ex)
+        {
+                EXPECT_THAT(ex.errMsg(), Eq("Invalid arg count: should be 6"));
+        }
+        catch (...)
+        {
+                FAIL() << "Expected CmdLineParserException to be thrown";
+        }
+}
+
+TEST_F(CmdLineParserTests, ShouldNotThrowWhenSixArgsAreProvided)
+{
         EXPECT_NO_THROW(CmdLineParser(6, nullptr));
 }
 
@@ -47,6 +61,5 @@ TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertFrom)
 
 TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertTo)
 {
-        std::cout << argv[5] << std::endl;
         EXPECT_THAT(cut.converters().second, Eq("fahrenheit"));
 }
