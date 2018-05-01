@@ -29,6 +29,7 @@ public:
         void parse(const int argc, char * argv[], CmdLineParser::Args * args);
 private:
         const bool isValidArgCount(const int argc);
+        const double convertStringToDouble(const char * str);
 };
 
 #endif

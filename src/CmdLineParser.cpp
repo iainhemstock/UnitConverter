@@ -49,7 +49,7 @@ CmdLineParser::parse(const int argc, char * argv[], CmdLineParser::Args * args)
                         }
 
                         if (optind < argc)
-                                args->valueToConvert = std::strtod(argv[optind], nullptr);
+                                args->valueToConvert = convertStringToDouble(argv[optind]);
                 }
         }
         else
@@ -64,4 +64,10 @@ CmdLineParser::isValidArgCount(const int argc)
         if (argc < 6 || argc > 6)
                 return false;
         return true;
+}
+
+const double
+CmdLineParser::convertStringToDouble(const char * str)
+{
+        return std::strtod(str, nullptr);
 }
