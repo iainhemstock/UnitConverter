@@ -2,7 +2,27 @@
 using namespace ::testing;
 #include "../inc/CmdLineParser.h"
 
-TEST(CmdLineParserTests, ShouldThrowWhenArgCountIsNotExactlySix)
+class CmdLineParserTests : public Test
+{
+public:
+        constexpr static int argc{6};
+        char * argv[argc];
+        CmdLineParser cut;
+public:
+        void SetUp()
+        {
+                argv[0] = (char*)"convert";
+                argv[1] = (char*)"3.14";
+                argv[2] = (char*)"--from";
+                argv[3] = (char*)"celsius";
+                argv[4] = (char*)"--to";
+                argv[5] = (char*)"fahrenheit";
+
+                cut.parse(argc, argv);
+        }
+};
+
+TEST_F(CmdLineParserTests, ShouldThrowWhenArgCountIsNotExactlySix)
 {
         EXPECT_THROW(CmdLineParser(0, nullptr), CmdLineParserException);
         EXPECT_THROW(CmdLineParser(5, nullptr), CmdLineParserException);
@@ -10,38 +30,23 @@ TEST(CmdLineParserTests, ShouldThrowWhenArgCountIsNotExactlySix)
         EXPECT_NO_THROW(CmdLineParser(6, nullptr));
 }
 
-TEST(CmdLineParserTests, ShouldReturnAppName)
+TEST_F(CmdLineParserTests, ShouldReturnAppName)
 {
-        char * argv[] = { (char*)"convert", (char*)"", (char*)"", (char*)"", (char*)"", (char*)"" };
-        const int argc = sizeof(argv) / sizeof(argv[0]);
-        const std::string expected = argv[0];
-        CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.appName(), Eq(expected));
+        EXPECT_THAT(cut.appName(), Eq(argv[0]));
 }
 
-TEST(CmdLineParserTests, ShouldReturnValueToConvert)
+TEST_F(CmdLineParserTests, ShouldReturnValueToConvert)
 {
-        char * argv[] = { (char*)"", (char*)"3.14", (char*)"", (char*)"", (char*)"", (char*)"" };
-        const int argc = sizeof(argv) / sizeof(argv[0]);
-        const double expected = std::strtod(argv[1], nullptr);
-        CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.valueToConvert(), Eq(expected));
+        EXPECT_THAT(cut.valueToConvert(), Eq(3.14));
 }
 
-TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertFrom)
+TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertFrom)
 {
-        char * argv[] = { (char*)"", (char*)"", (char*)"--from", (char*)"celsius", (char*)"", (char*)"" };
-        const int argc = sizeof(argv) / sizeof(argv[0]);
-        const std::string expected = argv[3];
-        CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.converters().first, Eq(expected));
+        EXPECT_THAT(cut.converters().first, Eq("celsius"));
 }
 
-TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertTo)
+TEST_F(CmdLineParserTests, ShouldReturnTypeOfConverterToConvertTo)
 {
-        char * argv[] = { (char*)"", (char*)"", (char*)"", (char*)"", (char*)"--to", (char*)"fahrenheit" };
-        const int argc = sizeof(argv) / sizeof(argv[0]);
-        const std::string expected = argv[5];
-        CmdLineParser parser(argc, argv);
-        EXPECT_THAT(parser.converters().second, Eq(expected));
+        std::cout << argv[5] << std::endl;
+        EXPECT_THAT(cut.converters().second, Eq("fahrenheit"));
 }
