@@ -1,4 +1,5 @@
 #include "../inc/CmdLineParser.h"
+#include <getopt.h>
 
 CmdLineParserException::CmdLineParserException(const std::string& errMsg)
 : m_errMsg{errMsg}
@@ -10,15 +11,36 @@ CmdLineParserException::errMsg() const
         return m_errMsg;
 }
 
-CmdLineParser::CmdLineParser(const int argc, const char * argv[])
+CmdLineParser::CmdLineParser(const int argc, char * argv[])
 {
         if (isValidArgCount(argc))
         {
-                if (argv != nullptr) {
+                if (argv != nullptr)
+                {
                         m_appName = argv[0];
-                        m_valueToConvert = std::strtod(argv[1], nullptr);
-                        m_convertFrom = argv[3];
-                        m_convertTo = argv[5];
+
+                        static struct option long_options[] =
+                        {
+                                { "from", required_argument, 0, 'f' },
+                                { "to", required_argument, 0, 't' }
+                        };
+                        int option_index = 0;
+                        int c;
+                        while ((c = getopt_long(argc, argv, "f:t:", long_options, &option_index)) != -1)
+                        {
+                                switch (c)
+                                {
+                                        case 'f':
+                                        m_convertFrom = argv[3];
+                                        break;
+                                        case 't':
+                                        m_convertTo = argv[5];
+                                        break;
+                                }
+                        }
+
+                        if (option_index < argc)
+                        m_valueToConvert = std::strtod(argv[optind], nullptr);
                 }
         }
         else

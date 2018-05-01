@@ -16,7 +16,7 @@ private:
 class CmdLineParser
 {
 public:
-        CmdLineParser(const int argc, const char * argv[]);
+        CmdLineParser(const int argc, char * argv[]);
 
         const std::string appName() const;
         const double valueToConvert() const;

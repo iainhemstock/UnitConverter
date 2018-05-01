@@ -12,7 +12,7 @@ TEST(CmdLineParserTests, ShouldThrowWhenArgCountIsNotExactlySix)
 
 TEST(CmdLineParserTests, ShouldReturnAppName)
 {
-        const char * argv[] = { "convert", "", "", "", "", "" };
+        char * argv[] = { (char*)"convert", (char*)"", (char*)"", (char*)"", (char*)"", (char*)"" };
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const std::string expected = argv[0];
         CmdLineParser parser(argc, argv);
@@ -21,7 +21,7 @@ TEST(CmdLineParserTests, ShouldReturnAppName)
 
 TEST(CmdLineParserTests, ShouldReturnValueToConvert)
 {
-        const char * argv[] = { "", "3.14", "", "", "", "" };
+        char * argv[] = { (char*)"", (char*)"3.14", (char*)"", (char*)"", (char*)"", (char*)"" };
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const double expected = std::strtod(argv[1], nullptr);
         CmdLineParser parser(argc, argv);
@@ -30,7 +30,7 @@ TEST(CmdLineParserTests, ShouldReturnValueToConvert)
 
 TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertFrom)
 {
-        const char * argv[] = { "", "", "", "celsius", "", "" };
+        char * argv[] = { (char*)"", (char*)"", (char*)"--from", (char*)"celsius", (char*)"", (char*)"" };
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const std::string expected = argv[3];
         CmdLineParser parser(argc, argv);
@@ -39,7 +39,7 @@ TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertFrom)
 
 TEST(CmdLineParserTests, ShouldReturnConverterTypeToConvertTo)
 {
-        const char * argv[] = { "", "", "", "", "", "fahrenheit" };
+        char * argv[] = { (char*)"", (char*)"", (char*)"", (char*)"", (char*)"--to", (char*)"fahrenheit" };
         const int argc = sizeof(argv) / sizeof(argv[0]);
         const std::string expected = argv[5];
         CmdLineParser parser(argc, argv);
